@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+    <script src="http://cdn.suoluomei.com/common/js/jquery-2.1.4.min.js "></script>
+
+    <title>Document</title>
+    <style lang="less">
+        /* 双飞翼布局 */
+        body{height: 2000px; font-family:  STXinwei, SimSun, Microsoft YaHei;}
+        .app-container{margin-top: 50px;}
+        .left{width: 220px; overflow: auto; font-size: 14px; overflow: hidden; z-index: 1024;}
+        .content{left: 220px; width: calc(100% - 460px); background-color: #f1f3f4;}
+        .right{ width: 240px; right: 0;}
+
+        /* 导航样式 */
+        svg{color: rgb(107, 124, 235); margin-right: 16px; font-weight: bolder; opacity: 1;}/*图标颜色大小*/
+         .list-group a{background-color: #F9F9F9; border: none;} /*设置左边侧栏的样式，将无序列表样式*/
+         .left .list-group a:hover{background-color: rgba(30, 144, 255, .2);} /*通过 hover 取消滤镜，观察该滤镜的效果。*/
+         .accordion .list-group a{background-color: #FFFFFF; padding-left: 54px; opacity: 0.75;} 
+        .accordion .list-group a span{background-color: black; opacity: 0.75; color: #fff;}/*整个的色彩*/
+        .card{border: none; opacity: 0.75;}/*设置中间图片的透明度
+        value ：指定不透明度，从0.0（完全透明）到1.0（完全不透明）。
+         opacity属性具有继承性，会使容器中的所有元素都具有透明度；*/
+        .card img{margin: auto;} /*让头像水平居中，使用margin:auto可以让元素水平居中的*/
+
+        .scroll-hidden{overflow-x: hidden; overflow-y: scroll; height: 100%; margin-right: -20px;}
+
+        /* 巨幕 */
+        .jumbotron{padding-top: 15px; padding-bottom: 15px;} 
+
+        /* 内容 图片*/
+        .content .card{overflow: hidden; width: 80%; margin: auto; margin-bottom: 10px;}
+        .content .card img{filter: brightness(50%); transition: all .2s;}
+        .content .card h2{color: #fff; text-shadow: 0 0 3px #fff; text-align: center; position: relative; top: 42%; transition: all .2s;}
+        .content .card .hr{bottom: 50px; width: 85%; height: 1px; position: absolute; font-size: 0; transform: translate(0,-10px); opacity: 0; transition: all .2s;}
+        .content .card .card-img-overlay p:nth-of-type(1){position: absolute; bottom: 60px; transform: translate(0,-10px); opacity: 0; transition: all .2s; color: #fff;}
+        .content .card .card-img-overlay p:nth-of-type(2){position: absolute; bottom: 20px; transform: translate(0,-10px); opacity: 0; transition: all .2s; color: #fff;}
+        .content .card .card-img-overlay:hover > p{transform: translateY(0); opacity: 1;}
+        .content .card .card-img-overlay:hover > .hr{transform: translateY(0); opacity: 0.5;}
+        .content .card .card-img-overlay:hover > h2{transform: translateY(-50px);}
+
+        /* 右侧栏 */
+        .right .list-unstyled li img{width: 200px; height: 160px;}
+
+        #tachu{
+            position: fixed;
+            top: 15px;
+            left: 200px;
+            width: 1000px;
+            height: 700px;
+        } 
+        /*#tanchu{position: fixed;top: 15px;left: 200px;width: 1000px;height: 700px;} */         
+    </style>
+    <script>
+        $(function () {
+            // $('#aside>div').css('height', innerHeight - 56);
+            $('.left').css('height', innerHeight - 56);
+            // $('#content').css('height', innerHeight - 56);
+
+            // 中间内容的图片 放大 文字居中 显示效果
+            $('.content .container-fluid>.card .card-img-overlay').hover(function(){
+                $(this).prev().css('transform', 'scale(1.05)').css('filter', 'brightness(20%) blur(2px)');
+            }, function() {
+                $(this).prev().css('transform', 'scale(1)').css('filter', 'brightness(50%) blur(0)');
+            })
+
+            // 文档加载是隐藏 vedio
+            $('#tachu').hide();
+
+            // 点击图片时，隐藏 vedio
+            $(document).on('click', function () {
+                $('#tachu').hide();
+                document.getElementById('tachu').pause();
+            });
+
+            // 防止视频点击时，事件冒泡
+            $('#tachu').click(function (e) {
+                e.stopPropagation();
+            })
+
+            // 点击图片显示 vedio
+            $('.media').on('click', function (e) {
+                // 防止事件冒泡
+                e.stopPropagation();
+                var vId = $(e.currentTarget).attr('v-id')
+                $('#tachu').attr('src', `.\\music\\MP4\\${vId}.mp4`).show();
+                // console.log($(e.currentTarget).attr('v-id'));
+            })
+
+        })
+
+        
+        $(window).on('resize', function(){
+            $('.left').css('height', innerHeight - 56);
+            // $('#content').css('height', innerHeight - 56);
+        })
+    </script>
+</head>
+<body class="bg-light">
+    <div class="container-fluid fixed-top shadow bg-light" id="head">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Basketball</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto" >
+                    <li class="nav-item active" >
+                        <button type="button" class="btn btn-primary" title="主页"     
+                        data-container="body" data-toggle="popover" data-placement="bottom" data-content="博客主页">
+                        Home</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-primary" title="游戏下载"data-container="body" data-toggle="popover" 
+                        data-placement="bottom"data-content="game">Link</button>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <button type="button" class="btn btn-primary" title="视频下载"     
+                        data-container="body" data-toggle="popover" data-placement="bottom" data-content="球星生涯集锦视频下载">
+                            Download
+                         </button>
+                        <script>$(function () 
+                            { $("[data-toggle='popover']").popover();
+                            });
+                         </script>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-primary" title="相关信息"     
+                        data-container="body" data-toggle="popover" data-placement="bottom" data-content="相关源码">
+                        关于本站</button>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+          </nav>
+    </div>
+
+    <div class="container-fluid position-absolute app-container">
+        <div class="controal position-relative">
+            <div class="left position-fixed shadow rounded">
+                <div class="scroll-hidden bg-light">
+                    <div class="card bg-light">
+                        <img src="timg.jpg" class="card-img-top rounded-circle w-75 h-75" alt="...">
+                        <div class="card-body">
+                        <h5 class="card-title">凯尔·库兹玛<br/>（Kyle Kuzma）</h5>
+                            <div>
+                            <p class="card-text">
+                                凯尔·库兹马于2017年通过选秀进入NBA,新秀赛季入选最佳新秀阵容一阵;
+                                2019年当选NBA全明星新秀挑战赛MVP;2020年随湖人队夺得2019-20赛季NBA总冠军。
+                            </p></div>
+                        </div>
+                    </div>
+                    <div class="list-group list-group-flush">           
+                        <a href="javascript:;" class="list-group-item list-group-item-action list-group-item-light">navigation</a>
+                        <a href="#" class="list-group-item list-group-item-action list-group-item-light">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-house" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M2 13.5V7h1v6.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h1v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5zm11-11V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
+                                <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
+                            </svg>
+                            首页
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action list-group-item-light">
+                            <svg xmlns="https://github.com/jundiedie" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github">
+                                <path
+                                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                </path>
+                            </svg>
+                            仓库
+                        </a>
+                        <a href="https://pan.baidu.com/disk/home?#/all?path=%2F&vmode=list" class="list-group-item list-group-item-action list-group-item-light">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cloud-arrow-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+                                <path fill-rule="evenodd" d="M7.646 10.854a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 9.293V5.5a.5.5 0 0 0-1 0v3.793L6.354 8.146a.5.5 0 1 0-.708.708l2 2z"/>
+                            </svg>
+                            我的网盘
+                        </a>
+                        <a href="https://y.qq.com/portal/player.html" class="list-group-item list-group-item-action list-group-item-light">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-music-note-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
+                                <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
+                                <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
+                                <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
+                            </svg>
+                            我的音乐
+                        </a>
+                        <a href="javascript:;" class="list-group-item list-group-item-action list-group-item-light">composition</a>
+                        <!-- <a href="#" class="list-group-item list-group-item-action list-group-item-light">A simple dark list</a> -->
+                        <div class="accordion list-group-flush" id="accordionExample">
+                            <a href="javascript:;" class="list-group-item list-group-item-action list-group-item-light" data-toggle="collapse"
+                                data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-grid" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
+                                </svg>
+                                分类
+                            </a>
+                            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                <div class="list-group list-group-flush">           
+                                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                        文案随笔
+                                        <span class="badge badge-primary badge-pill">14</span>
+                                    </a>
+                                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                        编程技术
+                                        <span class="badge badge-primary badge-pill">14</span>
+                                    </a>
+                                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                        胡乱折腾
+                                        <span class="badge badge-primary badge-pill">14</span>
+                                    </a>
+                                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                        资源共享
+                                        <span class="badge badge-primary badge-pill">14</span>
+                                    </a>
+                                </div>
+                            </div>
+                                
+                            <a href="javascript:;" class="list-group-item list-group-item-action list-group-item-light" type="button" data-toggle="collapse"
+                                data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-file-ruled" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
+                                    <path fill-rule="evenodd" d="M13 6H3V5h10v1zm0 3H3V8h10v1zm0 3H3v-1h10v1z"/>
+                                    <path fill-rule="evenodd" d="M5 14V6h1v8H5z"/>
+                                </svg>
+                                页面
+                            </a>
+                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <div class="list-group list-group-flush">           
+                                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                        蜘蛛网
+                                    </a>
+                                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                        时光机
+                                    </a>
+                                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                        留言板
+                                    </a>
+                                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                        关于我
+                                    </a>
+                                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                        捐赠本站
+                                    </a>
+                                </div>
+                            </div>
+    
+                            <a href="javascript:;" class="list-group-item list-group-item-action list-group-item-light" type="button" data-toggle="collapse"
+                                data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
+                                    <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
+                                    <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                </svg>
+                                友链
+                            </a>
+                            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div class="list-group list-group-flush">           
+                                    <a href="https://twitter.com/kylekuzma" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                        Kuz的ins主页
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content position-absolute">
+                <!-- 巨幕 显示文案 -->
+                <!-- <div class="jumbotron jumbotron-fluid shadow bg-light rounded"> -->
+                    <!-- <div class="container"> -->
+                        <!-- <h2> </h2> -->
+                        <!-- <p class="lead"></p> -->
+                    <!-- </div> -->
+                <!-- </div> -->
+                <div class="container-fluid">
+                    <div class="card bg-dark text-white">
+                        <img src="Lakers.jpg" class="card-img" alt="..."><!--无法显示时显示...-->
+                        <div class="card-img-overlay">
+                            
+                            <p class="card-text">2020NBA总冠军颁奖典礼 时隔十年让我们再次高喊：湖人总冠军！</p>
+                            <div class="hr bg-light"></div>
+                            <p class="card-text">湖人总冠军</p>
+                        </div>
+                    </div>
+                    <div class="card bg-dark text-white">
+                        <img src="9VTQFY1O.jpg" class="card-img" alt="...">
+                        <div class="card-img-overlay">
+                            <h2 class="card-title">King</h2>
+                            <p class="card-text">詹姆斯本赛季率领湖人夺冠并且荣膺总决赛MVP，詹姆斯现在有了4个总冠军和FMVP，并且他成为NBA历史上唯一率领三支不同的球队分别夺冠并且拿到FMVP的球员。其更有着4个常规赛MVP的荣誉加持，职业生涯至今的成就，
+                                可以说是一人之下万人之上了。而且最不可思议的是，他现在仍然在继续前进着，他仍然还可以以高水准去争冠，未来说不定还可以取得更多的荣誉。</p>
+                            <div class="hr bg-light"></div>
+                            <p class="card-text">历史上最佳球员</p>
+                        </div>
+                    </div>
+                    <div class="card bg-dark text-white">
+                        <img src="timgSA3KKMEI.jpg" class="card-img" alt="...">
+                        <div class="card-img-overlay">
+                            <h2 class="card-title">拿着底薪干着超巨的事</h2>
+                            <p class="card-text"> 湖人前锋凯尔-库兹马昨日发推总结自己的生涯历程。
+                                “我从以下情形起步：
+                                出生于弗林特。
+                                一份NAIA邀请。
+                                16岁上寄宿学校。
+                                GED（一般教育发展证书）。
+                                犹他大学的灰衫球员（注：非全日制学生）。
+                                大一赛季场均上场5分钟。
+                                被告知若离校我会落选。
+                                首轮新秀。
+                                NBA总冠军。
+                                拥抱你的历程。马拉松般的人生很疯狂。🤯🏆”库兹马写道。</p>
+                            <div class="hr bg-light"></div>
+                            <p class="card-text">Last updated 3 mins ago</p>
+                        </div>
+                    </div>
+                    <div class="card bg-dark text-white">
+                        <img src="g.jpg" class="card-img" alt="...">
+                        <div class="card-img-overlay">
+                            <h2 class="card-title">技术全面的大前锋</h2>
+                            <p class="card-text">洛杉矶湖人夺得2019-20赛季总冠军，Anthony Davis在职业生涯第8年捧起了人生第一座欧布莱恩金杯，
+                                而他并不因此满足，身为当今联盟最强大长人之一的Davis，想要再获得更多总冠军，还有MVP。
+                                再拿几座冠军，还有几个MVP跟一双签名鞋...」Davis笑着继续说道，「
+                                就像，他告诉我『这是你的球队了，这是你的时间了』他就像是在说『我已经很棒了，如果我今天退休，我也ok』。 </p>
+                            <div class="hr bg-light"></div>
+                            <p class="card-text">DPOY</p>
+                        </div>
+                    </div>
+                    <div class="card bg-dark text-white">
+                        <img src="h.jpg" class="card-img" alt="...">
+                        <div class="card-img-overlay">
+                            <h2 class="card-title">不是最强的魔兽<br>但是是最好的霍师傅</h2>
+                            <p class="card-text">德怀特·霍华德（Dwight Howard） ，1985年12月8日出生于美国佐治亚州亚特兰大（Atlanta, Georgia），美国职业篮球运动员，
+                                司职中锋，绰号“魔兽”，曾被誉为NBA现役第一中锋，效力于NBA洛杉矶湖人队。 [1]  德怀特·霍华德在2004年NBA选秀中于第1轮第1位被奥兰多魔术队选中，
+                                职业生涯先后效力于奥兰多魔术队、洛杉矶湖人队、休斯顿火箭队、亚特兰大老鹰队、夏洛特黄蜂队以及华盛顿奇才队，2007-14年连续8次入选NBA全明星阵容，2008年夺得NBA全明星扣篮大赛冠军，2009-11年连续3次荣膺NBA年度最佳防守球员，8次入选NBA最佳阵容（5次一阵，1次二阵，2次三阵）
+                                ，5次入选NBA最佳防守阵容（4次一阵，1次二阵），5次当选NBA篮板王，2009-10年连续2次荣膺NBA盖帽王，
+                                2019-20赛季随湖人队夺得NBA总冠军。 [2] </p>
+                            <div class="hr bg-light"></div>
+                            <p class="card-text">Last updated 3 mins ago</p>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <img src="7.jpg" class="card-img" alt="..." style="height: 100%;">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">库兹马：我今年牺牲了很多 但这都是值得的</h5>
+                                    <p class="card-text">谈到接受自己角色的转变，库兹马说道：“我今年牺牲了很多，但为了队友、球队、球迷，
+                                        这是很容易的选择，我们就是想赢球。来到联盟，成为了总冠军，这很疯狂，这太值了。”
+                                        <br>人们喜欢拿他跟希罗 塔图姆 英格拉姆等一众青年才俊对比却忘了他在这支以詹眉为核心的球队中所扮演的角色，
+                                        我们依然在诟病他的防守，但更多人看到了他的进步.库兹马的经历中贯穿着四个字，打破质疑，加油吧</p>
+                                    <p class="card-text"><small class="text-muted"> updated 3 mins ago</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right position-absolute">
+                <div class="card">
+                    <img src="leborn.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="Card title">联盟巨头</h5>
+                        <p class="card-text">
+                            现今NBA最强双人组合LeBron和Davis
+                        </p>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <h5>球员简介<small>(点击球员头像可观看生涯集锦)</small></h5>
+                    <ul class="list-unstyled">
+                        <li class="media" v-id="1">
+                            <div><img src="E:\per\2544.png" class="mr-3" alt="...">
+                                <!-- <video id="tachu"  /> -->
+                            </div>
+                            <div class="media-1">
+                                <a href="https://china.nba.com/players/#!/lebron_james"><p class="mt-0 mb-1">勒布朗-詹姆斯</p></a>  
+                            </div>
+                        </li>
+
+                         <li class="media" v-id="2">
+                            <div><img src="E:\per\203076.png" class="mr-3" alt="...">
+                            </div>
+                            <div class="media-2">
+                                <a href="https://china.nba.com/players/#!/anthony_davis"><p class="mt-0 mb-1">安东尼-戴维斯</p></a>
+                            </div>
+                        </li>
+                        <li class="media" v-id="3">
+                            <img src="E:\per\1628398.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/stats/#!/kyle_kuzma"><p class="mt-0 mb-1">凯尔-库兹玛</p></a>
+                            </div>
+                        </li>
+                        <li class="media-1">
+                            <img src="E:\per\203484.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/kentavious_caldwell-pope"><p class="mt-0 mb-1">肯塔维奥斯-考德威尔-波普</p></a>
+                            </div>
+                        </li>
+                        <li class="media-2">
+                            <img src="E:\per\200765.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/rajon_rondo"><p class="mt-0 mb-1">拉简-隆多</p></a>
+                            </div>
+                        </li>
+                        <li class="media-3">
+                            <img src="E:\per\201980.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/danny_green"><p class="mt-0 mb-1">丹尼-格林</p></a>
+                            </div>
+                        </li>
+                        <li class="media-4">
+                            <img src="E:\per\201580.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/javale_mcgee"><p class="mt-0 mb-1">贾维尔-麦基</p></a>
+                            </div>
+                        </li>
+                        <li class="media-4">
+                            <img src="E:\per\2730.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/dwight_howard"><p class="mt-0 mb-1">德怀特-霍华德</p></a>
+                            </div>
+                        </li><li class="media-4">
+                            <img src="E:\per\1627936.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/alex_caruso"><p class="mt-0 mb-1">亚历克斯-卡鲁索</p></a>
+                            </div>
+                        </li><li class="media-4">
+                            <img src="E:\per\202340.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/avery_bradley"><p class="mt-0 mb-1">埃弗里-布拉德利</p></a>
+                            </div>
+                        </li><li class="media-4">
+                            <img src="E:\per\202693.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/markieff_morris"><p class="mt-0 mb-1">马基夫-莫里斯</p></a>
+                            </div>
+                        </li><li class="media-4">
+                            <img src="E:\per\2747.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/jr_smith"><p class="mt-0 mb-1">JR-史密斯</p></a>
+                            </div>
+                        </li><li class="media-4">
+                            <img src="E:\per\203079.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/dion_waiters"><p class="mt-0 mb-1">迪昂-维特斯</p></a>
+                            </div>
+                        </li><li class="media-4">
+                            <img src="E:\per\1626188.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/quinn_cook"><p class="mt-0 mb-1">奎因-库克</p></a>
+                            </div>
+                        </li><li class="media-4">
+                            <img src="E:\per\1629659.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/talen_horton-tucker"><p class="mt-0 mb-1">塔伦-霍顿-塔克</p></a>
+                            </div>
+                        </li><li class="media-4">
+                            <img src="E:\per\201162.png" class="mr-3" alt="...">
+                            <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/jared_dudley"><p class="mt-0 mb-1">贾里德-杜德利</p></a>
+                            </div>
+                        </li>
+                        </li><li class="media-4">
+                             <img src="E:\per\1628961.png" class="mr-3" alt="...">
+                             <div class="media-body">
+                                <a href="https://china.nba.com/players/#!/kostas_antetokounmpoy"><p class="mt-0 mb-1">克斯塔斯-安特托昆博</p></a>
+                             </div>
+                    </li>
+                    </ul>
+                    <video id="tachu" controls="controls" src="E:\music\MP4\1.mp4"></video>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
