@@ -90,7 +90,7 @@
                 // 防止事件冒泡
                 e.stopPropagation();
                 var vId = $(e.currentTarget).attr('v-id')
-                $('#tachu').attr('src', `.\\music\\MP4\\${vId}.mp4`).show();
+                $('#tachu').attr('src', `http://iecoxe.top:90/1.mp4${vId}.mp4`).show();
                 // console.log($(e.currentTarget).attr('v-id'));
             })
 
@@ -390,7 +390,7 @@
                             </div>
                         </li>
 
-                         <li class="media" v-id="2">
+                         <li class="media" v-id="2"><!--v-id视频的自定义序号-->
                             <div><img src=".\per\203076.png" class="mr-3" alt="...">
                             </div>
                             <div class="media-2">
@@ -480,7 +480,7 @@
                              </div>
                     </li>
                     </ul>
-                    <video id="tachu" controls="controls" src="E:\music\MP4\1.mp4"></video>
+                    <video id="tachu" controls="controls" src="http://iecoxe.top:90/1.mp4"></video>
                 </div>
             </div>
         </div>
